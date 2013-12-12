@@ -690,172 +690,6 @@ var Settings = (function SettingsClosure() {
 })();
 
 
-/* globals PDFFindController, FindStates, mozL10n */
-
-/**
- * Creates a "search bar" given set of DOM elements
- * that act as controls for searching, or for setting
- * search preferences in the UI. This object also sets
- * up the appropriate events for the controls. Actual
- * searching is done by PDFFindController
- */
-var PDFFindBar = {
-
-  opened: false,
-  bar: null,
-  toggleButton: null,
-  findField: null,
-  highlightAll: null,
-  caseSensitive: null,
-  findMsg: null,
-  findStatusIcon: null,
-  findPreviousButton: null,
-  findNextButton: null,
-
-  initialize: function(options) {
-    if(typeof PDFFindController === 'undefined' || PDFFindController === null) {
-        throw 'PDFFindBar cannot be initialized ' +
-            'without a PDFFindController instance.';
-    }
-
-    this.bar = options.bar;
-    this.toggleButton = options.toggleButton;
-    this.findField = options.findField;
-    this.highlightAll = options.highlightAllCheckbox;
-    this.caseSensitive = options.caseSensitiveCheckbox;
-    this.findMsg = options.findMsg;
-    this.findStatusIcon = options.findStatusIcon;
-    this.findPreviousButton = options.findPreviousButton;
-    this.findNextButton = options.findNextButton;
-
-    var self = this;
-    this.toggleButton.addEventListener('click', function() {
-      self.toggle();
-    });
-
-    this.findField.addEventListener('input', function() {
-      self.dispatchEvent('');
-    });
-
-    this.bar.addEventListener('keydown', function(evt) {
-      switch (evt.keyCode) {
-        case 13: // Enter
-          if (evt.target === self.findField) {
-            self.dispatchEvent('again', evt.shiftKey);
-          }
-          break;
-        case 27: // Escape
-          self.close();
-          break;
-      }
-    });
-
-    this.findPreviousButton.addEventListener('click',
-      function() { self.dispatchEvent('again', true); }
-    );
-
-    this.findNextButton.addEventListener('click', function() {
-      self.dispatchEvent('again', false);
-    });
-
-    this.highlightAll.addEventListener('click', function() {
-      self.dispatchEvent('highlightallchange');
-    });
-
-    this.caseSensitive.addEventListener('click', function() {
-      self.dispatchEvent('casesensitivitychange');
-    });
-  },
-
-  dispatchEvent: function(aType, aFindPrevious) {
-    var event = document.createEvent('CustomEvent');
-    event.initCustomEvent('find' + aType, true, true, {
-      query: this.findField.value,
-      caseSensitive: this.caseSensitive.checked,
-      highlightAll: this.highlightAll.checked,
-      findPrevious: aFindPrevious
-    });
-    return window.dispatchEvent(event);
-  },
-
-  updateUIState: function(state, previous) {
-    var notFound = false;
-    var findMsg = '';
-    var status = '';
-
-    switch (state) {
-      case FindStates.FIND_FOUND:
-        break;
-
-      case FindStates.FIND_PENDING:
-        status = 'pending';
-        break;
-
-      case FindStates.FIND_NOTFOUND:
-        findMsg = mozL10n.get('find_not_found', null, 'Phrase not found');
-        notFound = true;
-        break;
-
-      case FindStates.FIND_WRAPPED:
-        if (previous) {
-          findMsg = mozL10n.get('find_reached_top', null,
-                      'Reached top of document, continued from bottom');
-        } else {
-          findMsg = mozL10n.get('find_reached_bottom', null,
-                                'Reached end of document, continued from top');
-        }
-        break;
-    }
-
-    if (notFound) {
-      this.findField.classList.add('notFound');
-    } else {
-      this.findField.classList.remove('notFound');
-    }
-
-    this.findField.setAttribute('data-status', status);
-    this.findMsg.textContent = findMsg;
-  },
-
-  open: function() {
-    if (!this.opened) {
-      this.opened = true;
-      this.toggleButton.classList.add('toggled');
-      this.bar.classList.remove('hidden');
-    }
-
-    this.findField.select();
-    this.findField.focus();
-  },
-
-  close: function() {
-    if (!this.opened) return;
-
-    this.opened = false;
-    this.toggleButton.classList.remove('toggled');
-    this.bar.classList.add('hidden');
-
-    PDFFindController.active = false;
-  },
-
-  toggle: function() {
-    if (this.opened) {
-      this.close();
-    } else {
-      this.open();
-    }
-  }
-};
-
-
-
-/* globals PDFFindBar, PDFJS, FindStates, FirefoxCom */
-
-/**
- * Provides a "search" or "find" functionality for the PDF.
- * This object actually performs the search for a given string.
- */
-
 var PDFFindController = {
   startedTextExtraction: false,
 
@@ -1024,9 +858,6 @@ var PDFFindController = {
     var page = this.pdfPageSource.pages[idx];
 
     if (this.selected.pageIdx === idx) {
-      // If the page is selected, scroll the page into view, which triggers
-      // rendering the page, which adds the textLayer. Once the textLayer is
-      // build, it will scroll onto the selected match.
       page.scrollIntoView();
     }
 
@@ -1536,131 +1367,6 @@ var PDFHistory = {
   }
 };
 
-
-var SecondaryToolbar = {
-  opened: false,
-  previousContainerHeight: null,
-  newContainerHeight: null,
-
-  initialize: function secondaryToolbarInitialize(options) {
-    this.toolbar = options.toolbar;
-    this.presentationMode = options.presentationMode;
-    this.buttonContainer = this.toolbar.firstElementChild;
-
-    // Define the toolbar buttons.
-    this.toggleButton = options.toggleButton;
-    this.presentationModeButton = options.presentationModeButton;
-    this.openFile = options.openFile;
-    this.print = options.print;
-    this.download = options.download;
-    this.firstPage = options.firstPage;
-    this.lastPage = options.lastPage;
-    this.pageRotateCw = options.pageRotateCw;
-    this.pageRotateCcw = options.pageRotateCcw;
-
-    // Attach the event listeners.
-    var elements = [
-      { element: this.toggleButton, handler: this.toggle },
-      { element: this.presentationModeButton,
-        handler: this.presentationModeClick },
-      { element: this.openFile, handler: this.openFileClick },
-      { element: this.print, handler: this.printClick },
-      { element: this.download, handler: this.downloadClick },
-      { element: this.firstPage, handler: this.firstPageClick },
-      { element: this.lastPage, handler: this.lastPageClick },
-      { element: this.pageRotateCw, handler: this.pageRotateCwClick },
-      { element: this.pageRotateCcw, handler: this.pageRotateCcwClick }
-    ];
-
-    for (var item in elements) {
-      var element = elements[item].element;
-      if (element) {
-        element.addEventListener('click', elements[item].handler.bind(this));
-      }
-    }
-  },
-
-  // Event handling functions.
-  presentationModeClick: function secondaryToolbarPresentationModeClick(evt) {
-    this.presentationMode.request();
-    this.close();
-  },
-
-  openFileClick: function secondaryToolbarOpenFileClick(evt) {
-    document.getElementById('fileInput').click();
-    this.close(evt.target);
-  },
-
-  printClick: function secondaryToolbarPrintClick(evt) {
-    window.print();
-    this.close(evt.target);
-  },
-
-  downloadClick: function secondaryToolbarDownloadClick(evt) {
-    PDFView.download();
-    this.close(evt.target);
-  },
-
-  firstPageClick: function secondaryToolbarFirstPageClick(evt) {
-    PDFView.page = 1;
-  },
-
-  lastPageClick: function secondaryToolbarLastPageClick(evt) {
-    PDFView.page = PDFView.pdfDocument.numPages;
-  },
-
-  pageRotateCwClick: function secondaryToolbarPageRotateCwClick(evt) {
-    PDFView.rotatePages(90);
-  },
-
-  pageRotateCcwClick: function secondaryToolbarPageRotateCcwClick(evt) {
-    PDFView.rotatePages(-90);
-  },
-
-  // Misc. functions for interacting with the toolbar.
-  setMaxHeight: function secondaryToolbarSetMaxHeight(container) {
-    if (!container || !this.buttonContainer) {
-      return;
-    }
-    this.newContainerHeight = container.clientHeight;
-    if (this.previousContainerHeight === this.newContainerHeight) {
-      return;
-    }
-    this.buttonContainer.setAttribute('style',
-      'max-height: ' + (this.newContainerHeight - SCROLLBAR_PADDING) + 'px;');
-    this.previousContainerHeight = this.newContainerHeight;
-  },
-
-  open: function secondaryToolbarOpen() {
-    if (this.opened) {
-      return;
-    }
-    this.opened = true;
-    this.toggleButton.classList.add('toggled');
-    this.toolbar.classList.remove('hidden');
-  },
-
-  close: function secondaryToolbarClose(target) {
-    if (!this.opened) {
-      return;
-    } else if (target && !this.toolbar.contains(target)) {
-      return;
-    }
-    this.opened = false;
-    this.toolbar.classList.add('hidden');
-    this.toggleButton.classList.remove('toggled');
-  },
-
-  toggle: function secondaryToolbarToggle() {
-    if (this.opened) {
-      this.close();
-    } else {
-      this.open();
-    }
-  }
-};
-
-
 var PasswordPrompt = {
   visible: false,
   updatePassword: null,
@@ -1748,7 +1454,7 @@ var PresentationMode = {
 
   initialize: function presentationModeInitialize(options) {
     this.container = options.container;
-    this.secondaryToolbar = options.secondaryToolbar;
+    //this.secondaryToolbar = options.secondaryToolbar;
 
     this.viewer = this.container.firstElementChild;
 
@@ -1759,20 +1465,20 @@ var PresentationMode = {
 
     this.firstPage.addEventListener('click', function() {
       this.contextMenuOpen = false;
-      this.secondaryToolbar.firstPageClick();
+      //this.secondaryToolbar.firstPageClick();
     }.bind(this));
     this.lastPage.addEventListener('click', function() {
       this.contextMenuOpen = false;
-      this.secondaryToolbar.lastPageClick();
+      //this.secondaryToolbar.lastPageClick();
     }.bind(this));
 
     this.pageRotateCw.addEventListener('click', function() {
       this.contextMenuOpen = false;
-      this.secondaryToolbar.pageRotateCwClick();
+      //this.secondaryToolbar.pageRotateCwClick();
     }.bind(this));
     this.pageRotateCcw.addEventListener('click', function() {
       this.contextMenuOpen = false;
-      this.secondaryToolbar.pageRotateCcwClick();
+      //this.secondaryToolbar.pageRotateCcwClick();
     }.bind(this));
   },
 
@@ -1926,22 +1632,6 @@ var PresentationMode = {
   window.addEventListener('MSFullscreenChange', presentationModeChange, false);
 })();
 
-
-/* Copyright 2013 Rob Wu <gwnRob@gmail.com>
- * https://github.com/Rob--W/grab-to-pan.js
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 'use strict';
 
@@ -2218,42 +1908,6 @@ var PDFView = {
     this.watchScroll(thumbnailContainer, this.thumbnailViewScroll,
                      this.renderHighestPriority.bind(this));
 
-    PDFFindBar.initialize({
-      bar: document.getElementById('findbar'),
-      toggleButton: document.getElementById('viewFind'),
-      findField: document.getElementById('findInput'),
-      highlightAllCheckbox: document.getElementById('findHighlightAll'),
-      caseSensitiveCheckbox: document.getElementById('findMatchCase'),
-      findMsg: document.getElementById('findMsg'),
-      findStatusIcon: document.getElementById('findStatusIcon'),
-      findPreviousButton: document.getElementById('findPrevious'),
-      findNextButton: document.getElementById('findNext')
-    });
-
-    PDFFindController.initialize({
-      pdfPageSource: this,
-      integratedFind: this.supportsIntegratedFind
-    });
-
-    HandTool.initialize({
-      container: container,
-      toggleHandTool: document.getElementById('toggleHandTool')
-    });
-
-    SecondaryToolbar.initialize({
-      toolbar: document.getElementById('secondaryToolbar'),
-      presentationMode: PresentationMode,
-      toggleButton: document.getElementById('secondaryToolbarToggle'),
-      presentationModeButton:
-        document.getElementById('secondaryPresentationMode'),
-      openFile: document.getElementById('secondaryOpenFile'),
-      print: document.getElementById('secondaryPrint'),
-      download: document.getElementById('secondaryDownload'),
-      firstPage: document.getElementById('firstPage'),
-      lastPage: document.getElementById('lastPage'),
-      pageRotateCw: document.getElementById('pageRotateCw'),
-      pageRotateCcw: document.getElementById('pageRotateCcw')
-    });
 
     PasswordPrompt.initialize({
       overlayContainer: document.getElementById('overlayContainer'),
@@ -2261,15 +1915,6 @@ var PDFView = {
       passwordText: document.getElementById('passwordText'),
       passwordSubmit: document.getElementById('passwordSubmit'),
       passwordCancel: document.getElementById('passwordCancel')
-    });
-
-    PresentationMode.initialize({
-      container: container,
-      secondaryToolbar: SecondaryToolbar,
-      firstPage: document.getElementById('contextFirstPage'),
-      lastPage: document.getElementById('contextLastPage'),
-      pageRotateCw: document.getElementById('contextPageRotateCw'),
-      pageRotateCcw: document.getElementById('contextPageRotateCcw')
     });
 
     this.initialized = true;
@@ -3121,12 +2766,6 @@ var PDFView = {
 
   getHighestPriority: function pdfViewGetHighestPriority(visible, views,
                                                          scrolledDown) {
-    // The state has changed figure out which page has the highest priority to
-    // render next (if any).
-    // Priority:
-    // 1 visible pages
-    // 2 if last scrolled down page after the visible pages
-    // 2 if last scrolled up page before the visible pages
     var visibleViews = visible.views;
 
     var numVisible = visibleViews.length;
@@ -3159,8 +2798,6 @@ var PDFView = {
     return view.renderingState === RenderingStates.FINISHED;
   },
 
-  // Render a page or thumbnail view. This calls the appropriate function based
-  // on the views state. If the view is already rendered it will return false.
   renderView: function pdfViewRender(view, type) {
     var state = view.renderingState;
     switch (state) {
@@ -4822,16 +4459,6 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
       PDFView.renderHighestPriority();
     });
 
-  document.getElementById('viewThumbnail').addEventListener('click',
-    function() {
-      PDFView.switchSidebarView('thumbs');
-    });
-
-  document.getElementById('viewOutline').addEventListener('click',
-    function() {
-      PDFView.switchSidebarView('outline');
-    });
-
   document.getElementById('previous').addEventListener('click',
     function() {
       PDFView.page--;
@@ -4871,20 +4498,6 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
     function() {
       PDFView.setScale(this.value);
     });
-
-  document.getElementById('presentationMode').addEventListener('click',
-    SecondaryToolbar.presentationModeClick.bind(SecondaryToolbar));
-
-  document.getElementById('openFile').addEventListener('click',
-    SecondaryToolbar.openFileClick.bind(SecondaryToolbar));
-
-  document.getElementById('print').addEventListener('click',
-    SecondaryToolbar.printClick.bind(SecondaryToolbar));
-
-  document.getElementById('download').addEventListener('click',
-    SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
-
-
   PDFView.open(file, 0);
 }, true);
 
@@ -4963,7 +4576,7 @@ window.addEventListener('resize', function webViewerResize(evt) {
   updateViewarea();
 
   // Set the 'max-height' CSS property of the secondary toolbar.
-  SecondaryToolbar.setMaxHeight(PDFView.container);
+  //SecondaryToolbar.setMaxHeight(PDFView.container);
 });
 
 window.addEventListener('hashchange', function webViewerHashchange(evt) {
@@ -5031,7 +4644,7 @@ window.addEventListener('localized', function localized(evt) {
     }
 
     // Set the 'max-height' CSS property of the secondary toolbar.
-    SecondaryToolbar.setMaxHeight(PDFView.container);
+    //SecondaryToolbar.setMaxHeight(PDFView.container);
   });
 }, true);
 
@@ -5101,9 +4714,9 @@ window.addEventListener('DOMMouseScroll', function(evt) {
 
 window.addEventListener('click', function click(evt) {
   if (!PresentationMode.active) {
-    if (SecondaryToolbar.opened && PDFView.container.contains(evt.target)) {
+    /*if (SecondaryToolbar.opened && PDFView.container.contains(evt.target)) {
       SecondaryToolbar.close();
-    }
+    }*/
   } else if (evt.button === 0) {
     // Necessary since preventDefault() in 'mousedown' won't stop
     // the event propagation in all circumstances in presentation mode.
@@ -5168,7 +4781,7 @@ window.addEventListener('keydown', function keydown(evt) {
   if (cmd === 3 || cmd === 10) {
     switch (evt.keyCode) {
       case 80: // p
-        SecondaryToolbar.presentationModeClick();
+       // SecondaryToolbar.presentationModeClick();
         handled = true;
         break;
       case 71: // g
@@ -5225,10 +4838,10 @@ window.addEventListener('keydown', function keydown(evt) {
         handled = true;
         break;
       case 27: // esc key
-        if (SecondaryToolbar.opened) {
+        /*if (SecondaryToolbar.opened) {
           SecondaryToolbar.close();
           handled = true;
-        }
+        }*/
         if (!PDFView.supportsIntegratedFind && PDFFindBar.opened) {
           PDFFindBar.close();
           handled = true;

@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+* { -moz-box-sizing: border-box; }
+ 
 * {
   padding: 0;
   margin: 0;
@@ -28,6 +30,18 @@ body {
   height: 100%;
   background-color: #404040;
   background-image: url(images/texture.png);
+}
+
+section {
+  overflow: hidden;
+  font-size: 1rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-size: 2rem;
 }
 
 body,
@@ -145,6 +159,15 @@ select {
   pointer-events: none;
   position: relative;
 }
+#viewerContainer {
+  position: absolute;
+  overflow: auto;
+  width: 100%;
+  top: 5rem;
+  bottom: 4rem;
+  left: 0;
+  right: 0;
+}
 html[dir='ltr'] .outerCenter {
   float: right;
   right: 50%;
@@ -247,14 +270,13 @@ html[dir='rtl'] #sidebarContent {
 }
 
 #viewerContainer {
-  overflow: auto;
-  box-shadow: inset 1px 0 0 hsla(0,0%,100%,.05);
   position: absolute;
-  top: 32px;
-  right: 0;
-  bottom: 0;
+  overflow: auto;
+  width: 100%;
+  top: 5rem;
+  bottom: 4rem;
   left: 0;
-  outline: none;
+  right: 0;
 }
 
 .toolbar {
@@ -375,7 +397,7 @@ html[dir='ltr'] .findbar {
 html[dir='rtl'] .findbar {
   right: 68px;
 }
-
+/*
 .findbar label {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -405,7 +427,7 @@ html[dir='rtl'] .secondaryToolbar {
   overflow-y: auto;
   margin-bottom: -4px;
 }
-
+*/
 .doorHanger,
 .doorHangerRight {
   border: 1px solid hsla(0,0%,0%,.5);
@@ -499,7 +521,7 @@ html[dir='rtl'] .findbar > * {
   position: relative;
   float: right;
 }
-
+/*
 html[dir='ltr'] .splitToolbarButton {
   margin: 3px 2px 4px 0;
   display: inline-block;
@@ -576,7 +598,7 @@ html[dir='rtl'] .splitToolbarButton > .toolbarButton {
               0 0 1px hsla(0,0%,100%,.15) inset,
               0 0 1px hsla(0,0%,0%,.05);
   z-index: 199;
-}
+}*/
 html[dir='ltr'] .splitToolbarButton > .toolbarButton:first-child,
 html[dir='rtl'] .splitToolbarButton > .toolbarButton:last-child {
   position: relative;
@@ -801,12 +823,9 @@ html[dir='rtl'] #findPrevious {
 html[dir='rtl'] #findNext {
   margin-left: 3px;
 }
-
+/*
 .toolbarButton::before,
 .secondaryToolbarButton::before {
-  /* All matching images have a size of 16x16
-   * (except for the print button: 18x16)
-   * All relevant containers have a size of 32x25 */
   position: absolute;
   display: inline-block;
   top: 4px;
@@ -986,7 +1005,7 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 .secondaryToolbarButton.handTool::before {
   content: url(images/secondaryToolbarButton-handTool.png);
 }
-
+*/
 .verticalToolbarSeparator {
   display: block;
   padding: 8px 0;
@@ -1701,3 +1720,80 @@ canvas {
   }
 }
 
+footer {
+  background-image: url(images/toolbar_background.png);
+  height: 4rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  box-shadow: 0 -0.2rem 0.5rem rgba(50, 50, 50, 0.75);
+}
+
+
+.toolbarButton {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border-width: 0;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+
+.toolbarButton.pageUp {
+  position: absolute;
+  width: 18%;
+  height: 100%;
+  left: 0;
+  background-image: url(images/icon_previous_page.png);
+  background-size: 2rem;
+}
+
+.toolbarButton.pageDown {
+  position: absolute;
+  width: 18%;
+  height: 100%;
+  left: 18%;
+  background-image: url(images/icon_next_page.png);
+  background-size: 2rem;
+}
+
+#pageNumber {
+  position: absolute;
+  width: 28%;
+  height: 100%;
+  left: 36%;
+  text-align: center;
+  border: 0;
+  background-color: transparent;
+  font-size: 1.2rem;
+  color: #FFF;
+  background-image: url(images/div_line_left.png), url(images/div_line_right.png);
+  background-repeat: no-repeat;
+  background-position: left, right;
+  background-size: 0.2rem, 0.2rem;
+}
+
+.toolbarButton.zoomOut {
+  position: absolute;
+  width: 18%;
+  height: 100%;
+  left: 64%;
+  background-image: url(images/icon_zoom_out.png);
+  background-size: 2.4rem;
+}
+
+.toolbarButton.zoomIn {
+  position: absolute;
+  width: 18%;
+  height: 100%;
+  left: 82%;
+  background-image: url(images/icon_zoom_in.png);
+  background-size: 2.4rem;
+}
+
+.toolbarButton[disabled] {
+  opacity: .3;
+}
