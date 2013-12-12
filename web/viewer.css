@@ -397,37 +397,7 @@ html[dir='ltr'] .findbar {
 html[dir='rtl'] .findbar {
   right: 68px;
 }
-/*
-.findbar label {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-}
 
-#findInput[data-status="pending"] {
-  background-image: url(images/loading-small.png);
-  background-repeat: no-repeat;
-  background-position: right;
-}
-
-.secondaryToolbar {
-  padding: 6px;
-  height: auto;
-  z-index: 30000;
-}
-html[dir='ltr'] .secondaryToolbar {
-  right: 4px;
-}
-html[dir='rtl'] .secondaryToolbar {
-  left: 4px;
-}
-
-#secondaryToolbarButtonContainer {
-  max-width: 200px;
-  max-height: 400px;
-  overflow-y: auto;
-  margin-bottom: -4px;
-}
-*/
 .doorHanger,
 .doorHangerRight {
   border: 1px solid hsla(0,0%,0%,.5);
@@ -521,84 +491,7 @@ html[dir='rtl'] .findbar > * {
   position: relative;
   float: right;
 }
-/*
-html[dir='ltr'] .splitToolbarButton {
-  margin: 3px 2px 4px 0;
-  display: inline-block;
-}
-html[dir='rtl'] .splitToolbarButton {
-  margin: 3px 0 4px 2px;
-  display: inline-block;
-}
-html[dir='ltr'] .splitToolbarButton > .toolbarButton {
-  border-radius: 0;
-  float: left;
-}
-html[dir='rtl'] .splitToolbarButton > .toolbarButton {
-  border-radius: 0;
-  float: right;
-}
 
-.toolbarButton,
-.secondaryToolbarButton {
-  border: 0 none;
-  background-color: rgba(0, 0, 0, 0);
-  width: 32px;
-  height: 25px;
-}
-
-.toolbarButton > span {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-
-.toolbarButton[disabled],
-.secondaryToolbarButton[disabled] {
-  opacity: .5;
-}
-
-.toolbarButton.group {
-  margin-right: 0;
-}
-
-.splitToolbarButton.toggled .toolbarButton {
-  margin: 0;
-}
-
-.splitToolbarButton:hover > .toolbarButton,
-.splitToolbarButton:focus > .toolbarButton,
-.splitToolbarButton.toggled > .toolbarButton,
-.toolbarButton.textButton {
-  background-color: hsla(0,0%,0%,.12);
-  background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,100%,0));
-  background-clip: padding-box;
-  border: 1px solid hsla(0,0%,0%,.35);
-  border-color: hsla(0,0%,0%,.32) hsla(0,0%,0%,.38) hsla(0,0%,0%,.42);
-  box-shadow: 0 1px 0 hsla(0,0%,100%,.05) inset,
-              0 0 1px hsla(0,0%,100%,.15) inset,
-              0 1px 0 hsla(0,0%,100%,.05);
-  -webkit-transition-property: background-color, border-color, box-shadow;
-  -webkit-transition-duration: 150ms;
-  -webkit-transition-timing-function: ease;
-  transition-property: background-color, border-color, box-shadow;
-  transition-duration: 150ms;
-  transition-timing-function: ease;
-
-}
-.splitToolbarButton > .toolbarButton:hover,
-.splitToolbarButton > .toolbarButton:focus,
-.dropdownToolbarButton:hover,
-.promptButton:hover,
-.toolbarButton.textButton:hover,
-.toolbarButton.textButton:focus {
-  background-color: hsla(0,0%,0%,.2);
-  box-shadow: 0 1px 0 hsla(0,0%,100%,.05) inset,
-              0 0 1px hsla(0,0%,100%,.15) inset,
-              0 0 1px hsla(0,0%,0%,.05);
-  z-index: 199;
-}*/
 html[dir='ltr'] .splitToolbarButton > .toolbarButton:first-child,
 html[dir='rtl'] .splitToolbarButton > .toolbarButton:last-child {
   position: relative;
@@ -678,40 +571,6 @@ html[dir='rtl'] .toolbarButton,
 html[dir='rtl'] .promptButton,
 html[dir='rtl'] .dropdownToolbarButton {
   margin: 3px 0 4px 2px;
-}
-
-.toolbarButton:hover,
-.toolbarButton:focus,
-.dropdownToolbarButton,
-.promptButton,
-.secondaryToolbarButton:hover,
-.secondaryToolbarButton:focus {
-  background-color: hsla(0,0%,0%,.12);
-  background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,100%,0));
-  background-clip: padding-box;
-  border: 1px solid hsla(0,0%,0%,.35);
-  border-color: hsla(0,0%,0%,.32) hsla(0,0%,0%,.38) hsla(0,0%,0%,.42);
-  box-shadow: 0 1px 0 hsla(0,0%,100%,.05) inset,
-              0 0 1px hsla(0,0%,100%,.15) inset,
-              0 1px 0 hsla(0,0%,100%,.05);
-}
-
-.toolbarButton:hover:active,
-.promptButton:hover:active,
-.dropdownToolbarButton:hover:active,
-.secondaryToolbarButton:hover:active {
-  background-color: hsla(0,0%,0%,.2);
-  background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,100%,0));
-  border-color: hsla(0,0%,0%,.35) hsla(0,0%,0%,.4) hsla(0,0%,0%,.45);
-  box-shadow: 0 1px 1px hsla(0,0%,0%,.1) inset,
-              0 0 1px hsla(0,0%,0%,.2) inset,
-              0 1px 0 hsla(0,0%,100%,.05);
-  -webkit-transition-property: background-color, border-color, box-shadow;
-  -webkit-transition-duration: 10ms;
-  -webkit-transition-timing-function: linear;
-  transition-property: background-color, border-color, box-shadow;
-  transition-duration: 10ms;
-  transition-timing-function: linear;
 }
 
 .toolbarButton.toggled,
@@ -823,189 +682,7 @@ html[dir='rtl'] #findPrevious {
 html[dir='rtl'] #findNext {
   margin-left: 3px;
 }
-/*
-.toolbarButton::before,
-.secondaryToolbarButton::before {
-  position: absolute;
-  display: inline-block;
-  top: 4px;
-  left: 7px;
-}
 
-html[dir="ltr"] .secondaryToolbarButton::before {
-  left: 4px;
-}
-html[dir="rtl"] .secondaryToolbarButton::before {
-  right: 4px;
-}
-
-html[dir='ltr'] .toolbarButton#sidebarToggle::before {
-  content: url(images/toolbarButton-sidebarToggle.png);
-}
-html[dir='rtl'] .toolbarButton#sidebarToggle::before {
-  content: url(images/toolbarButton-sidebarToggle-rtl.png);
-}
-
-html[dir='ltr'] .toolbarButton#secondaryToolbarToggle::before {
-  content: url(images/toolbarButton-secondaryToolbarToggle.png);
-}
-html[dir='rtl'] .toolbarButton#secondaryToolbarToggle::before {
-  content: url(images/toolbarButton-secondaryToolbarToggle-rtl.png);
-}
-
-html[dir='ltr'] .toolbarButton.findPrevious::before {
-  content: url(images/findbarButton-previous.png);
-}
-html[dir='rtl'] .toolbarButton.findPrevious::before {
-  content: url(images/findbarButton-previous-rtl.png);
-}
-
-html[dir='ltr'] .toolbarButton.findNext::before {
-  content: url(images/findbarButton-next.png);
-}
-html[dir='rtl'] .toolbarButton.findNext::before {
-  content: url(images/findbarButton-next-rtl.png);
-}
-
-html[dir='ltr'] .toolbarButton.pageUp::before {
-  content: url(images/toolbarButton-pageUp.png);
-}
-html[dir='rtl'] .toolbarButton.pageUp::before {
-  content: url(images/toolbarButton-pageUp-rtl.png);
-}
-
-html[dir='ltr'] .toolbarButton.pageDown::before {
-  content: url(images/toolbarButton-pageDown.png);
-}
-html[dir='rtl'] .toolbarButton.pageDown::before {
-  content: url(images/toolbarButton-pageDown-rtl.png);
-}
-
-.toolbarButton.zoomOut::before {
-  content: url(images/toolbarButton-zoomOut.png);
-}
-
-.toolbarButton.zoomIn::before {
-  content: url(images/toolbarButton-zoomIn.png);
-}
-
-.toolbarButton.presentationMode::before,
-.secondaryToolbarButton.presentationMode::before {
-  content: url(images/toolbarButton-presentationMode.png);
-}
-
-.toolbarButton.print::before,
-.secondaryToolbarButton.print::before {
-  content: url(images/toolbarButton-print.png);
-  left: 6px;
-}
-
-html[dir="ltr"] .secondaryToolbarButton.print::before {
-  left: 3px;
-}
-html[dir="rtl"] .secondaryToolbarButton.print::before {
-  right: 3px;
-}
-
-.toolbarButton.openFile::before,
-.secondaryToolbarButton.openFile::before {
-  content: url(images/toolbarButton-openFile.png);
-}
-
-.toolbarButton.download::before,
-.secondaryToolbarButton.download::before {
-  content: url(images/toolbarButton-download.png);
-}
-
-.toolbarButton.bookmark,
-.secondaryToolbarButton.bookmark {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  padding-top: 4px;
-  text-decoration: none;
-}
-.secondaryToolbarButton.bookmark {
-  padding-top: 5px;
-}
-
-.bookmark[href='#'] {
-  opacity: .5;
-  pointer-events: none;
-}
-
-.toolbarButton.bookmark::before,
-.secondaryToolbarButton.bookmark::before {
-  content: url(images/toolbarButton-bookmark.png);
-}
-
-#viewThumbnail.toolbarButton::before {
-  content: url(images/toolbarButton-viewThumbnail.png);
-}
-
-html[dir="ltr"] #viewOutline.toolbarButton::before {
-  content: url(images/toolbarButton-viewOutline.png);
-}
-html[dir="rtl"] #viewOutline.toolbarButton::before {
-  content: url(images/toolbarButton-viewOutline-rtl.png);
-}
-
-#viewFind.toolbarButton::before {
-  content: url(images/toolbarButton-search.png);
-}
-
-.secondaryToolbarButton {
-  position: relative;
-  margin: 0 0 4px 0;
-  padding: 3px 0 1px 0;
-  height: auto;
-  min-height: 25px;
-  width: auto;
-  min-width: 100%;
-  white-space: normal;
-}
-html[dir="ltr"] .secondaryToolbarButton {
-  padding-left: 24px;
-  text-align: left;
-}
-html[dir="rtl"] .secondaryToolbarButton {
-  padding-right: 24px;
-  text-align: right;
-}
-html[dir="ltr"] .secondaryToolbarButton.bookmark {
-  padding-left: 27px;
-}
-html[dir="rtl"] .secondaryToolbarButton.bookmark {
-  padding-right: 27px;
-}
-
-html[dir="ltr"] .secondaryToolbarButton > span {
-  padding-right: 4px;
-}
-html[dir="rtl"] .secondaryToolbarButton > span {
-  padding-left: 4px;
-}
-
-.secondaryToolbarButton.firstPage::before {
-  content: url(images/secondaryToolbarButton-firstPage.png);
-}
-
-.secondaryToolbarButton.lastPage::before {
-  content: url(images/secondaryToolbarButton-lastPage.png);
-}
-
-.secondaryToolbarButton.rotateCcw::before {
-  content: url(images/secondaryToolbarButton-rotateCcw.png);
-}
-
-.secondaryToolbarButton.rotateCw::before {
-  content: url(images/secondaryToolbarButton-rotateCw.png);
-}
-
-.secondaryToolbarButton.handTool::before {
-  content: url(images/secondaryToolbarButton-handTool.png);
-}
-*/
 .verticalToolbarSeparator {
   display: block;
   padding: 8px 0;
@@ -1744,7 +1421,7 @@ footer {
 
 .toolbarButton.pageUp {
   position: absolute;
-  width: 18%;
+  width: 15%;
   height: 100%;
   left: 0;
   background-image: url(images/icon_previous_page.png);
@@ -1753,18 +1430,18 @@ footer {
 
 .toolbarButton.pageDown {
   position: absolute;
-  width: 18%;
+  width: 15%;
   height: 100%;
-  left: 18%;
+  left: 15%;
   background-image: url(images/icon_next_page.png);
   background-size: 2rem;
 }
 
 #pageNumber {
   position: absolute;
-  width: 28%;
+  width: 25%;
   height: 100%;
-  left: 36%;
+  left: 30%;
   text-align: center;
   border: 0;
   background-color: transparent;
@@ -1778,20 +1455,29 @@ footer {
 
 .toolbarButton.zoomOut {
   position: absolute;
-  width: 18%;
+  width: 15%;
   height: 100%;
-  left: 64%;
+  left: 55%;
   background-image: url(images/icon_zoom_out.png);
   background-size: 2.4rem;
 }
 
 .toolbarButton.zoomIn {
   position: absolute;
-  width: 18%;
+  width: 15%;
   height: 100%;
-  left: 82%;
+  left: 70%;
   background-image: url(images/icon_zoom_in.png);
   background-size: 2.4rem;
+}
+
+.toolbarButton.save {
+	position: absolute;
+	width: 15%;
+	height: 100%;
+	left: 85%;
+	background-image: url(images/icon_download.png);
+	background-size: 2.4rem;
 }
 
 .toolbarButton[disabled] {
