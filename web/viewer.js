@@ -22,7 +22,7 @@
 
 'use strict';
 
-var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
+var DEFAULT_URL = null;//'compressed.tracemonkey-pldi-09.pdf';
 var DEFAULT_SCALE = 'auto';
 var DEFAULT_SCALE_DELTA = 1.1;
 var UNKNOWN_SCALE = 0;
@@ -2224,6 +2224,7 @@ var PDFView = {
 
   setTitle: function pdfViewSetTitle(title) {
     document.title = title;
+	document.querySelector('#activityTitle').textContent = title;
   },
 
   // TODO(mack): This function signature should really be pdfViewOpen(url, args)
@@ -4498,7 +4499,9 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
     function() {
       PDFView.setScale(this.value);
     });
-  PDFView.open(file, 0);
+	if (file) {
+		PDFView.open(file, 0);
+	}
 }, true);
 
 function updateViewarea() {
@@ -4954,4 +4957,26 @@ window.addEventListener('afterprint', function afterPrint(evt) {
   });
 })();
 
+window.navigator.mozSetMessageHandler('activity', function(activity) {
+	var url = activity.source.data.url;
+	var blob = activity.source.data.blob;
+	var title = activity.source.data.title;
+	
+	PDFJS.maxImageSize = 1024 * 1024;
+	if (url) {
+		PDFView.open(url);
+	} else if (blob) {
+		var fileReader = new FileReader();
+		fileReader.onload = function (e) {
+			PDFView.open(new Uint8Array(e.target.result), 0);
+		};
 
+		fileReader.readAsArrayBuffer(blob);
+		PDFView.setTitle(title);
+	}
+	var cancelButton = document.getElementById('activityClose');
+	
+	cancelButton.addEventListener('click', function() {
+		activity.postResult('close');
+	});
+});
